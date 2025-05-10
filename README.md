@@ -1,67 +1,113 @@
 # Generic Gate Driver
-Generic Gate Driver in an Half Bridge configuration for use in laboratory projects.
 
-## Installation Instructions
+A simple half-bridge gate driver testbench for lab use, based on the Infineon Eval-1ED3321MC12N. Allows easy switching between IGBT and SiC MOSFETs using a modular setup and Arduino control.
+You may check the Final_Presentation for a brief idea or the Project_Book for more information.
 
-### 1. Install ...
-bla\
-bla.\
-bla
+---
 
-blaaa
+## Installation & Setup
 
-1. Download ??? from [Links Name](Link Addres).
-   - asdcacas
-   - ascasca
-   - dfvsdfg
-2. Installation  ????
+### 1. Required Instruments
 
-### 2. Install more ..????
+You will need:
 
-You can mmmmfasf
+- 2 × Isolated DC power supplies (+15 V / -7.5 V or -2 V)
+- 1 × High-voltage DC power supply (e.g., 30 V, 1.5 A)
+- Arduino Uno R3
+- Eval-1ED3321MC12N Gate Driver Board
+- IGBT or SiC MOSFETs (TO-247 package)
+- Load resistors (e.g., 20 Ω, 30 Ω)
 
-1. Openasf asd fasfa 
-2. asdf asdf asf
-   ```bash
-   pip install pyfemm ltspice
-3. asdf asdfas asdfasdf
+<div align="center">
+  <img src="./Pictures/Setup.jpg" alt="Setup Overview" width="50%">
+</div>
 
-### 3. Initial File Setup
+---
 
-For initial setup do asdfasdfas fasdfasdf 
+## Usage Instructions
 
-1. Navigate to ..............
-2. Create .... ???
-3. Clone the project repository and place the notebook in the new directory:
-   - Git Repository: GitHub - FEMM_to_LTspice
-   - Path .....
-4. For initial execution, use additional files form the git repository and place them to the directory:
-   - file 1
-   - filw 2
-5. To work with ???
-   - file 3
-   - file 4
-6. Optionally ... ??
-   - file 5
-   - file 6
+### 1. Flash the Arduino
 
-### 4. Open the ???
-Note: Ensure....
+1. Connect the Arduino to your PC via USB.
+2. Upload the PWM sketch (`PWM_1kHz_Arduino_UNO_R3_for_USiC_V2_basic_code_both_sides_micro_dead-time.ino` or equivalent).
+3. Confirm pin configuration:
+   - D9 → INPH (high-side control)
+   - D10 → INPL (low-side control)
+   - D13 → /RST (optional)
 
-1. asdfasfa sd fas
+---
 
-2. asdfasdfasdf
+### 2. Test Arduino Signals
 
-3. Launch asdfasdf
+- Use an oscilloscope to verify PWM output from D9 and D10.
+- Ensure complementary waveforms with visible dead-time (e.g., ~6 µs).
+- Confirm frequency (e.g., 1 kHz default).
 
-4. Open Jasdfasdfa
+e.g.
+<p align="center">
+  <img src="./Pictures/0us_in_the_code_zoom.BMP" alt="pic1" width="30%" style="display:inline-block; margin-right: 10px;">
+  <img src="./Pictures/0us_in_the_code_zoom_dead_time_D10_D9.BMP" alt="pic2" width="30%" style="display:inline-block; margin-right: 10px;">
+  <img src="./Pictures/0us_in_the_code_zoom_dead_time_D9_D10.BMP" alt="pic3" width="30%" style="display:inline-block;">
+</p>
+---
 
-5. Navigate to asdfasdfadf
-   - Path is sasdfasdfafa
+### 3. Connect Power Supplies (depends on transistors type)
+IGBT (IKW40N120H3):
+- **HS Side**: +15 V, GND, -7.5 V → VCC2_HS, GND2_HS, VEE2_HS 
+- **LS Side**: +15 V, GND, -7.5 V → VCC2_LS, GND2_LS, VEE2_LS
+- **Logic side** (Arduino): 5 V to VCC1, GND to GND1
 
-6. Follow the instructions .... asdk.\
-   It is recommended to....
+USiC (UJ4C075018K3S):
+- **HS Side**: +15 V, GND, -2 V → VCC2_HS, GND2_HS, VEE2_HS 
+- **LS Side**: +15 V, GND, -2 V → VCC2_LS, GND2_LS, VEE2_LS
+- **Logic side** (Arduino): 5 V to VCC1, GND to GND1
 
-## Examples
-1. **blabla**: blu blu
-2. **bli bli**: blem blem
+---
+
+### 4. Connect High Voltage Supply
+
+- Connect HV+ and HV− to the Eval board
+- Add resistive load:
+  - 20 Ω between HV+ and PHASE
+  - 30 Ω between PHASE and HV−
+
+---
+
+### 5. Verify Gate Voltages
+
+- Measure Vge or Vgs for HS and LS: TP10 to GP10 and TP20 to GP20
+- Expected levels:
+  - IGBT: +15 V / −7.5 V
+  - SiC: +15 V / −2 V
+
+e.g.
+<p align="center">
+  <img src="./Pictures/USiC_test1_+15_-2_30V_1.5A_Vgs_HS(high_voltage_off).BMP" alt="pic1" width="30%" style="display:inline-block; margin-right: 10px;">
+  <img src="./Pictures/USiC_test1_+15_-2_30V_1.5A_Vgs_HS(high_voltage_ON).BMP" alt="pic2" width="30%" style="display:inline-block; margin-right: 10px;">
+  <img src="./Pictures/USiC_test1_+15_-2_30V_1.5A_Vgs_LS(high_voltage_off).BMP" width="30%" style="display:inline-block;">
+</p>
+---
+
+### 6. Full Setup Test
+
+- Use oscilloscope to verify:
+  - Vge/Vgs , Vce / Vds, and PHASE node behavior
+  - Switching waveform shape, timing, overshoot, and dead-time
+
+You may follow the included `Tests_IGBT.docx` or the similar guides for detailed measurement methodology.
+
+e.g.
+<p align="center">
+  <img src="./Pictures/USiC_test2_+15_-2_30V_1.5A_Vgs_Vds_HS.BMP" alt="pic1" width="30%" style="display:inline-block; margin-right: 10px;">
+  <img src="./Pictures/USiC_test2_+15_-2_30V_1.5A_Vgs_Vds_HS_zoom.BMP" alt="pic2" width="30%" style="display:inline-block; margin-right: 10px;">
+  <img src="./Pictures/USiC_test2_+15_-2_30V_1.5A_Vgs_Vds_LS.BMP" width="30%" style="display:inline-block;">
+</p>
+
+---
+
+## Notes
+
+- Ensure safe probe grounding when measuring HS and LS simultaneously
+- Dead-time tuning is essential—avoid shoot-through
+
+---
