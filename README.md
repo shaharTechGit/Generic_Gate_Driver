@@ -86,6 +86,7 @@ e.g.
   <img src="./Pictures/USiC_test1_+15_-2_30V_1.5A_Vgs_HS(high_voltage_ON).BMP" alt="pic2" width="30%" style="display:inline-block; margin-right: 10px;">
   <img src="./Pictures/USiC_test1_+15_-2_30V_1.5A_Vgs_LS(high_voltage_off).BMP" width="30%" style="display:inline-block;">
 </p>
+
 ---
 
 ### 6. Full Setup Test
@@ -109,5 +110,14 @@ e.g.
 
 - Ensure safe probe grounding when measuring HS and LS simultaneously
 - Dead-time tuning is essential—avoid shoot-through
+
+---
+
+## Videos
+
+The following videos demonstrate the physical setup and measurement procedures using the Generic Gate Driver. \
+System Wiring Overview and Oscilloscope Measurement Example.
+
+https://youtube.com/playlist?list=PLatbwNQTGRxXGEnfuNpwd2v5VmKknorOE&feature=shared
 
 ---
